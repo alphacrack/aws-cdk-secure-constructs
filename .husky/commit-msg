@@ -1,0 +1,30 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+# Get the commit message
+COMMIT_MSG=$(cat "$1")
+
+# Conventional commit pattern
+# Format: type(scope): description
+# Types: feat, fix, docs, style, refactor, test, chore, perf, ci, build, revert
+PATTERN="^(feat|fix|docs|style|refactor|test|chore|perf|ci|build|revert)(\(.+\))?: .+"
+
+if ! echo "$COMMIT_MSG" | grep -qE "$PATTERN"; then
+    echo "${RED}❌ Invalid commit message format${NC}"
+    echo "${YELLOW}Expected format: type(scope): description${NC}"
+    echo "${YELLOW}Types: feat, fix, docs, style, refactor, test, chore, perf, ci, build, revert${NC}"
+    echo "${YELLOW}Examples:${NC}"
+    echo "  feat(secure-bucket): add encryption by default"
+    echo "  fix: resolve TypeScript compilation error"
+    echo "  docs: update README with usage examples"
+    echo "  test: add unit tests for security levels"
+    exit 1
+fi
+
+echo "${GREEN}✅ Commit message format is valid${NC}" 
