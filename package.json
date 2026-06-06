@@ -107,7 +107,7 @@
     "nx": "19.8.4",
     "prettier": "^3.0.3",
     "ts-jest": "^29.1.1",
-    "typescript": "~5.4.0"
+    "typescript": "~6.0.3"
   },
   "peerDependencies": {
     "aws-cdk-lib": "^2.196.0",
