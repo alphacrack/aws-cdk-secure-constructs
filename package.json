@@ -89,7 +89,7 @@
     "@types/jest": "^29.5.8",
     "@types/node": "^20.8.10",
     "@typescript-eslint/eslint-plugin": "^6.9.1",
-    "@typescript-eslint/parser": "^6.9.1",
+    "@typescript-eslint/parser": "^8.60.1",
     "aws-cdk": "^2.196.0",
     "aws-cdk-lib": "2.196.0",
     "constructs": "10.3.0",
