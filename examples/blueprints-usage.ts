@@ -6,7 +6,9 @@ import { Bucket } from 'aws-cdk-lib/aws-s3';
 import {
   SecureBucketDefaults,
   StrictSecureBucketDefaults,
-} from '../src/blueprints/secure-bucket-defaults';
+  TieredSecureBucketDefaults,
+  SecurityLevel,
+} from '../src';
 
 /**
  * CDK Blueprints usage example for AWS CDK Secure Constructs
@@ -85,6 +87,31 @@ class AppLevelSecurityStack extends Stack {
   }
 }
 
+// Example 4: Tiered, tighten-only injection
+class TieredSecurityStack extends Stack {
+  constructor(scope: App, id: string) {
+    super(scope, id);
+
+    // Apply a MEDIUM organisational security floor. The injector can only
+    // tighten tier-variable fields and always re-asserts CIS-critical settings,
+    // so every bucket below stays CIS-compliant.
+    PropertyInjectors.of(this).add(
+      new TieredSecureBucketDefaults({ securityLevel: SecurityLevel.MEDIUM })
+    );
+
+    // Even though this bucket asks for no versioning and no SSL, the injector
+    // enforces CIS-critical SSL/encryption and applies the MEDIUM tier defaults.
+    const tieredBucket = new Bucket(this, 'TieredBucket', {
+      bucketName: 'my-tiered-bucket',
+      enforceSSL: false,
+    });
+
+    this.exportValue(tieredBucket.bucketName, {
+      name: 'TieredBucketName',
+    });
+  }
+}
+
 // Add app-level secure defaults
 PropertyInjectors.of(app).add(new SecureBucketDefaults());
 
@@ -92,5 +119,6 @@ PropertyInjectors.of(app).add(new SecureBucketDefaults());
 new FlexibleSecurityStack(app, 'FlexibleSecurityStack');
 new StrictSecurityStack(app, 'StrictSecurityStack');
 new AppLevelSecurityStack(app, 'AppLevelSecurityStack');
+new TieredSecurityStack(app, 'TieredSecurityStack');
 
 app.synth();

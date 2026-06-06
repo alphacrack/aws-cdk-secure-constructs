@@ -1,0 +1,44 @@
+name: Feature request
+description: Suggest a new construct, injector, or capability
+title: "[feature]: "
+labels: ["feature-request", "needs-triage"]
+body:
+  - type: input
+    id: service
+    attributes:
+      label: AWS service / construct
+      description: Which AWS service or construct should this cover?
+      placeholder: e.g. SQS (SecureQueue), DynamoDB (SecureTable)
+    validations:
+      required: true
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use case
+      description: What problem does this solve? Who needs it and why?
+    validations:
+      required: true
+  - type: textarea
+    id: proposed-api
+    attributes:
+      label: Proposed API
+      description: Sketch the construct/injector API you have in mind.
+      render: typescript
+    validations:
+      required: false
+  - type: textarea
+    id: security
+    attributes:
+      label: Security considerations
+      description: Which CIS-critical settings should be locked vs tier-variable?
+    validations:
+      required: false
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-submission checklist
+      options:
+        - label: I have searched existing issues to avoid duplicates
+          required: true
+        - label: This aligns with the project goals (secure-by-default, CIS-compliant)
+          required: true

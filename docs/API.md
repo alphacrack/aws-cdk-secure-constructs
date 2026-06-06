@@ -1,12 +1,32 @@
 # API Reference
 
-This document provides comprehensive API documentation for AWS CDK Secure Constructs.
+Public API for **aws-cdk-secure-constructs**. Currently covers S3 only.
+Requires `aws-cdk-lib` >= 2.196.0.
 
 ## Table of Contents
 
+- [SecurityLevel](#securitylevel)
 - [SecureBucket](#securebucket)
 - [SecureBucketDefaults](#securebucketdefaults)
 - [StrictSecureBucketDefaults](#strictsecurebucketdefaults)
+- [TieredSecureBucketDefaults](#tieredsecurebucketdefaults)
+- [Compliance reporting](#compliance-reporting)
+
+## SecurityLevel
+
+Operational security tier applied to tier-variable fields. CIS-critical settings
+are always enforced regardless of tier.
+
+```typescript
+enum SecurityLevel {
+  HIGH = 'high',   // library default
+  MEDIUM = 'medium',
+  LOW = 'low',
+}
+```
+
+`SecurityLevels.strictest(a?, b?)` returns the stronger of two tiers (defaulting
+to `HIGH`), implementing the tighten-only precedence rule.
 
 ## SecureBucket
 
@@ -22,16 +42,18 @@ new SecureBucket(scope: Construct, id: string, props?: SecureBucketProps)
 
 #### SecureBucketProps
 
-Extends `BucketProps` with additional security-focused properties:
+Extends `BucketProps` with additional security-focused properties. CIS-critical
+settings (`encryption`, `blockPublicAccess`, `enforceSSL`, `objectOwnership`) are
+always enforced and any conflicting values supplied here are ignored.
 
 | Property | Type | Default | Description |
 |----------|------|---------|-------------|
-| `versioned` | `boolean` | `true` | Whether to enable versioning for the bucket |
-| `enableAccessLogging` | `boolean` | `true` | Whether to enable access logging |
+| `securityLevel` | `SecurityLevel` | `HIGH` | Operational tier for tier-variable fields |
+| `versioned` | `boolean` | tier (`true` for HIGH/MEDIUM) | Whether to enable versioning |
+| `enableAccessLogging` | `boolean` | tier (`true` for HIGH/MEDIUM) | Whether to provision an access-log bucket |
 | `lifecycleRules` | `LifecycleRule[]` | Default cost optimization rules | Lifecycle rules for the bucket |
-| `enableEncryption` | `boolean` | `true` | Whether to enable server-side encryption |
-| `removalPolicy` | `RemovalPolicy` | `RETAIN` | Removal policy for the bucket |
-| `enforceSSL` | `boolean` | `true` | Whether to enforce SSL for all requests |
+| `removalPolicy` | `RemovalPolicy` | tier (`RETAIN` for HIGH) | Removal policy for the bucket |
+| `enableEncryption` | `boolean` | _ignored_ | Deprecated; encryption is always enforced (CIS-critical) |
 
 ### Methods
 
@@ -238,20 +260,81 @@ const bucket = new Bucket(stack, 'MyBucket', {
 });
 ```
 
+## TieredSecureBucketDefaults
+
+Tier-aware, tighten-only property injector. Applies the chosen `SecurityLevel`
+to tier-variable fields using a field-level "secure-max" merge (it can only
+tighten, never loosen incoming values) and always re-asserts the CIS-critical
+settings - so buckets stay CIS-compliant at every tier.
+
+### Constructor
+
+```typescript
+new TieredSecureBucketDefaults(options?: TieredSecureBucketOptions)
+
+interface TieredSecureBucketOptions {
+  readonly securityLevel?: SecurityLevel; // default HIGH
+}
+```
+
+### Behaviour
+
+- Tier-variable fields (`versioned`, `removalPolicy`) are set to the strictest of
+  the tier default and any incoming value.
+- CIS-critical fields (`encryption`, `blockPublicAccess`, `enforceSSL`,
+  `objectOwnership`) are always enforced.
+- Combined with `SecureBucket`, the effective tier is
+  `strictest(constructTier, injectorTier)` - the injector is an org-wide floor.
+
+### Example
+
+```typescript
+import { PropertyInjectors } from 'aws-cdk-lib';
+import { TieredSecureBucketDefaults, SecurityLevel } from 'aws-cdk-secure-constructs';
+
+PropertyInjectors.of(app).add(
+  new TieredSecureBucketDefaults({ securityLevel: SecurityLevel.MEDIUM })
+);
+
+// Even with weaker requests, CIS-critical settings are enforced and tier
+// defaults are applied (tighten-only).
+new Bucket(stack, 'MyBucket', { enforceSSL: false, versioned: false });
+```
+
+## Compliance reporting
+
+Each resource exposes a CIS compliance report; `ComplianceRegistry` aggregates
+all exposed resources.
+
+```typescript
+import { S3BucketCompliance, ComplianceRegistry, ControlStatus } from 'aws-cdk-secure-constructs';
+
+const s3Report = S3BucketCompliance.report();
+const allReports = ComplianceRegistry.all();
+
+const enforced = s3Report.controls.filter(c => c.status === ControlStatus.ENFORCED);
+```
+
+Every `ENFORCED` control is backed by a synthesis test (see
+`test/resources/s3-bucket/compliance.test.ts`) so the report cannot claim a
+control that the code does not actually enforce.
+
 ## Type Definitions
 
 ### SecureBucketProps
 
 ```typescript
-interface SecureBucketProps extends Omit<BucketProps, 'encryption' | 'blockPublicAccess'> {
-  readonly versioned?: boolean;
+interface SecureBucketProps extends BucketProps {
+  readonly securityLevel?: SecurityLevel;
   readonly enableAccessLogging?: boolean;
-  readonly lifecycleRules?: LifecycleRule[];
+  /** @deprecated Encryption is always enforced (CIS-critical); has no effect. */
   readonly enableEncryption?: boolean;
-  readonly removalPolicy?: RemovalPolicy;
-  readonly enforceSSL?: boolean;
 }
 ```
+
+> Note: the interface extends `BucketProps` directly (no `Omit`) to remain
+> jsii-compatible. CIS-critical fields inherited from `BucketProps` are applied
+> internally and cannot be weakened.
 
 ### Default Lifecycle Rules
 
