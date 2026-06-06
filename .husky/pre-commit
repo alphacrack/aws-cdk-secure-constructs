@@ -9,13 +9,7 @@ NC='\033[0m' # No Color
 
 echo "${YELLOW}🔍 Running pre-commit checks...${NC}"
 
-# Check if we're in a git repository
-if ! git rev-parse --git-dir > /dev/null 2>&1; then
-    echo "${RED}❌ Not in a git repository${NC}"
-    exit 1
-fi
-
-# Get the list of staged files
+# Only check files staged for commit
 STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(ts|js|json|md)$')
 
 if [ -z "$STAGED_FILES" ]; then
@@ -26,27 +20,28 @@ fi
 echo "${YELLOW}📁 Staged files:${NC}"
 echo "$STAGED_FILES"
 
-# Run lint-staged which will use Nx commands
+# 1. Lint + format staged files (eslint --fix, prettier --write)
 echo "${YELLOW}🔧 Running lint-staged...${NC}"
 if ! npm run pre-commit; then
-    echo "${RED}❌ Lint-staged failed${NC}"
+    echo "${RED}❌ lint-staged failed${NC}"
     exit 1
 fi
 
-# Run tests on affected files (only if there are TypeScript files)
+# The remaining checks only matter when TypeScript changed.
 if echo "$STAGED_FILES" | grep -q '\.ts$'; then
-    echo "${YELLOW}🧪 Running tests on affected files...${NC}"
-    if ! npx nx affected:test --base=HEAD~1 --head=HEAD --parallel=2 --passWithNoTests; then
+    # 2. jsii type-check / compile
+    echo "${YELLOW}🏗️  Building (jsii)...${NC}"
+    if ! JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 npm run build; then
+        echo "${RED}❌ Build failed${NC}"
+        exit 1
+    fi
+
+    # 3. Full test suite (fast) incl. verified CIS compliance tests
+    echo "${YELLOW}🧪 Running tests...${NC}"
+    if ! npm test; then
         echo "${RED}❌ Tests failed${NC}"
         exit 1
     fi
 fi
 
-# Check if build works
-echo "${YELLOW}🏗️  Checking build...${NC}"
-if ! npx nx build --skip-nx-cache; then
-    echo "${RED}❌ Build failed${NC}"
-    exit 1
-fi
-
-echo "${GREEN}✅ Pre-commit checks completed successfully!${NC}" 
+echo "${GREEN}✅ Pre-commit checks completed successfully!${NC}"

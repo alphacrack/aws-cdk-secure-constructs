@@ -1,0 +1,20 @@
+name: Documentation issue
+description: Report missing, unclear, or incorrect documentation
+title: "[docs]: "
+labels: ["documentation", "needs-triage"]
+body:
+  - type: input
+    id: location
+    attributes:
+      label: Affected documentation
+      description: Link or path to the affected doc section (README, docs/API.md, etc.)
+      placeholder: docs/API.md#tieredsecurebucketdefaults
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is wrong or missing?
+      description: Describe the issue and, if possible, the suggested fix.
+    validations:
+      required: true

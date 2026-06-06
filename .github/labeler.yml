@@ -1,0 +1,33 @@
+s3:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/resources/s3-bucket/**"
+          - "test/resources/s3-bucket/**"
+
+core:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/core/**"
+          - "test/core/**"
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "docs/**"
+          - "**/*.md"
+
+tests:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "test/**"
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/**"
+
+dependencies:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "package.json"
+          - "package-lock.json"

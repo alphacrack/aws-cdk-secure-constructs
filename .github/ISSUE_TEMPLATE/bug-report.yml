@@ -1,0 +1,79 @@
+name: Bug report
+description: Report a defect in a construct or property injector
+title: "[bug]: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for taking the time to file a bug report. Please do not report security vulnerabilities here - see SECURITY.md.
+  - type: input
+    id: construct
+    attributes:
+      label: Affected construct / injector
+      description: e.g. SecureBucket, TieredSecureBucketDefaults
+      placeholder: SecureBucket
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What did you expect to happen?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What actually happened? Include error messages / stack traces.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: A minimal CDK snippet that reproduces the issue.
+      render: typescript
+    validations:
+      required: true
+  - type: input
+    id: cdk-version
+    attributes:
+      label: aws-cdk-lib version
+      placeholder: 2.196.0
+    validations:
+      required: true
+  - type: input
+    id: package-version
+    attributes:
+      label: aws-cdk-secure-constructs version
+      placeholder: 1.0.0
+    validations:
+      required: true
+  - type: input
+    id: node-version
+    attributes:
+      label: Node.js version
+      placeholder: 20.x
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options:
+        - macOS
+        - Linux
+        - Windows
+        - Other
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-submission checklist
+      options:
+        - label: I have searched existing issues to avoid duplicates
+          required: true
+        - label: I have tested with the latest version
+          required: true

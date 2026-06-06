@@ -1,0 +1,21 @@
+{
+  "name": "local-consumer",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Local CDK app that consumes aws-cdk-secure-constructs from a packed tarball",
+  "scripts": {
+    "synth": "cdk synth",
+    "build": "tsc --noEmit"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "^2.196.0",
+    "aws-cdk-secure-constructs": "file:../../aws-cdk-secure-constructs-1.0.0.tgz",
+    "constructs": "^10.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.10",
+    "aws-cdk": "^2.196.0",
+    "ts-node": "^10.9.2",
+    "typescript": "~5.4.0"
+  }
+}

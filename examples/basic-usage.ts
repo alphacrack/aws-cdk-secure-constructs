@@ -2,7 +2,7 @@
 import 'source-map-support/register';
 import { App, Stack } from 'aws-cdk-lib';
 
-import { SecureBucket } from '../src/constructs/secure-bucket';
+import { SecureBucket, SecurityLevel } from '../src';
 
 /**
  * Basic usage example for AWS CDK Secure Constructs
@@ -16,10 +16,12 @@ class SecureBucketStack extends Stack {
   constructor(scope: App, id: string) {
     super(scope, id);
 
-    // Create a secure S3 bucket with default security settings
+    // Create a secure S3 bucket with default security settings (HIGH tier).
+    // CIS-critical settings (encryption, SSL, block-public-access, object
+    // ownership) are always enforced regardless of the chosen tier.
     const secureBucket = new SecureBucket(this, 'MySecureBucket', {
       bucketName: 'my-secure-bucket-example',
-      versioned: true,
+      securityLevel: SecurityLevel.HIGH,
       enableAccessLogging: true,
     });
 

@@ -5,58 +5,53 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+  id-token: write
+
+env:
+  JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION: '1'
+
 jobs:
   release:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Use Node.js 20.x
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20.x'
-        cache: 'npm'
-        registry-url: 'https://registry.npmjs.org'
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+          registry-url: 'https://registry.npmjs.org'
 
-    - name: Install dependencies
-      run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
-    - name: Run tests
-      run: npm test
+      - name: Lint
+        run: npm run lint
 
-    - name: Build project
-      run: npm run build
+      - name: Test
+        run: npm test -- --ci
 
-    - name: Publish to npm
-      run: npm publish
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Build (jsii)
+        run: npm run build
 
-    - name: Create GitHub Release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        body: |
-          ## What's Changed
-          
-          This release includes:
-          - Security improvements
-          - Bug fixes
-          - New features
-          
-          ## Installation
-          
-          ```bash
-          npm install aws-cdk-secure-constructs@${{ github.ref_name }}
-          ```
-          
-          ## Documentation
-          
-          See the [README](./README.md) for usage examples and documentation.
-        draft: false
-        prerelease: false 
+      - name: Publish to npm (with provenance)
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          body: |
+            ## Installation
+
+            ```bash
+            npm install aws-cdk-secure-constructs@${{ github.ref_name }}
+            ```
+
+            See the [README](./README.md) and [CHANGELOG](./CHANGELOG.md) for details.

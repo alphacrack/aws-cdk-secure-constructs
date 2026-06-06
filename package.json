@@ -1,28 +1,37 @@
 {
   "name": "aws-cdk-secure-constructs",
   "version": "1.0.0",
-  "description": "Professional AWS CDK constructs with security best practices using CDK Blueprints",
+  "description": "Secure-by-default AWS CDK constructs with property injection and CIS-verified compliance reports",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
+  "files": [
+    "lib",
+    ".jsii"
+  ],
+  "stability": "stable",
   "scripts": {
-    "build": "nx build",
-    "watch": "nx build --watch",
-    "test": "nx test",
-    "test:watch": "nx test --watch",
-    "test:coverage": "nx test --coverage",
-    "lint": "nx lint",
-    "lint:fix": "nx lint --fix",
-    "format": "nx format",
-    "format:check": "nx format:check",
+    "build": "jsii",
+    "build:watch": "jsii --watch",
+    "package": "jsii-pacmak",
+    "api-diff": "jsii-diff npm:$npm_package_name",
+    "watch": "jsii --watch",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:local-build": "bash scripts/test-local-build.sh",
+    "release": "bash scripts/release.sh",
+    "lint": "eslint \"src/**/*.ts\" \"test/**/*.ts\" \"examples/*.ts\"",
+    "lint:fix": "eslint \"src/**/*.ts\" \"test/**/*.ts\" \"examples/*.ts\" --fix",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"examples/*.ts\" \"**/*.{json,md}\"",
+    "format:check": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\" \"examples/*.ts\"",
+    "prepublishOnly": "npm run build",
     "cdk": "cdk",
     "cdk:synth": "cdk synth",
     "cdk:deploy": "cdk deploy",
     "cdk:destroy": "cdk destroy",
     "prepare": "husky install",
     "pre-commit": "lint-staged",
-    "nx:graph": "nx graph",
-    "nx:affected": "nx affected:graph",
-    "clean": "nx reset"
+    "clean": "rm -rf lib dist coverage .jsii tsconfig.tsbuildinfo"
   },
   "keywords": [
     "aws",
@@ -34,25 +43,56 @@
     "typescript"
   ],
   "author": {
-    "name": "Your Name",
-    "email": "your.email@example.com"
+    "name": "alphacrack",
+    "url": "https://github.com/alphacrack"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/aws-cdk-secure-constructs.git"
+    "url": "https://github.com/alphacrack/aws-cdk-secure-constructs.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/aws-cdk-secure-constructs/issues"
+    "url": "https://github.com/alphacrack/aws-cdk-secure-constructs/issues"
   },
-  "homepage": "https://github.com/yourusername/aws-cdk-secure-constructs#readme",
+  "homepage": "https://github.com/alphacrack/aws-cdk-secure-constructs#readme",
+  "jsii": {
+    "outdir": "dist",
+    "versionFormat": "short",
+    "targets": {
+      "python": {
+        "distName": "aws-cdk-secure-constructs",
+        "module": "aws_cdk_secure_constructs"
+      },
+      "java": {
+        "package": "io.github.example.securecdk",
+        "maven": {
+          "groupId": "io.github.example",
+          "artifactId": "aws-cdk-secure-constructs"
+        }
+      },
+      "dotnet": {
+        "namespace": "Example.SecureCdk",
+        "packageId": "Example.SecureCdk"
+      }
+    },
+    "tsc": {
+      "outDir": "lib",
+      "rootDir": "src"
+    },
+    "excludeTypescript": [
+      "examples",
+      "test"
+    ]
+  },
   "devDependencies": {
     "@nrwl/workspace": "^19.8.4",
     "@types/jest": "^29.5.8",
     "@types/node": "^20.8.10",
     "@typescript-eslint/eslint-plugin": "^6.9.1",
     "@typescript-eslint/parser": "^6.9.1",
-    "aws-cdk": "^2.96.0",
+    "aws-cdk": "^2.196.0",
+    "aws-cdk-lib": "2.196.0",
+    "constructs": "10.3.0",
     "eslint": "^8.53.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-import": "^2.29.0",
@@ -60,23 +100,27 @@
     "eslint-plugin-prettier": "^5.0.1",
     "husky": "^8.0.3",
     "jest": "^29.7.0",
+    "jsii": "^5.4.0",
+    "jsii-diff": "^1.103.0",
+    "jsii-pacmak": "^1.103.0",
     "lint-staged": "^15.0.2",
     "nx": "19.8.4",
     "prettier": "^3.0.3",
     "ts-jest": "^29.1.1",
-    "typescript": "^5.2.2"
+    "typescript": "~5.4.0"
   },
-  "dependencies": {
-    "aws-cdk-lib": "^2.96.0",
+  "peerDependencies": {
+    "aws-cdk-lib": "^2.196.0",
     "constructs": "^10.3.0"
   },
+  "bundledDependencies": [],
   "lint-staged": {
-    "*.{ts,js}": [
-      "nx lint --fix",
-      "nx format"
+    "*.ts": [
+      "eslint --fix",
+      "prettier --write"
     ],
     "*.{json,md}": [
-      "nx format"
+      "prettier --write"
     ]
   },
   "engines": {
