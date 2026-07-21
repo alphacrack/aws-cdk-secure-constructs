@@ -103,7 +103,7 @@
     "jsii": "^5.4.0",
     "jsii-diff": "^1.135.0",
     "jsii-pacmak": "^1.135.0",
-    "lint-staged": "^15.0.2",
+    "lint-staged": "^17.1.0",
     "nx": "19.8.4",
     "prettier": "^3.8.4",
     "ts-jest": "^29.4.11",
