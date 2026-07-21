@@ -109,7 +109,7 @@
     "nx": "23.1.0",
     "prettier": "^3.8.4",
     "ts-jest": "^29.4.11",
-    "typescript": "~5.4.0",
+    "typescript": "~6.0.3",
     "typescript-eslint": "^8.60.1"
   },
   "peerDependencies": {
