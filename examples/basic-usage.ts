@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-import 'source-map-support/register';
 import { App, Stack } from 'aws-cdk-lib';
 
 import { SecureBucket, SecurityLevel } from '../src';
