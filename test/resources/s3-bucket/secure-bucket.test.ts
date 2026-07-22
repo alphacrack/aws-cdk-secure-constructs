@@ -184,4 +184,27 @@ describe('SecureBucket', () => {
       expect(secureBucket.bucket.node.id).toBe('Bucket');
     });
   });
+
+  describe('attribute pass-through getters', () => {
+    it('exposes bucketArn and bucketName directly on the construct', () => {
+      const bucket = new SecureBucket(stack, 'TestBucket', {
+        bucketName: 'my-secure-bucket',
+      });
+
+      expect(bucket.bucketArn).toBeDefined();
+      expect(bucket.bucketArn).toBe(bucket.bucket.bucketArn);
+      expect(bucket.bucketName).toBe(bucket.bucket.bucketName);
+      expect(bucket.bucketDomainName).toBe(bucket.bucket.bucketDomainName);
+      expect(bucket.bucketRegionalDomainName).toBe(bucket.bucket.bucketRegionalDomainName);
+    });
+
+    it('resolves getters to the same values as the wrapped bucket', () => {
+      const bucket = new SecureBucket(stack, 'TestBucket', {
+        bucketName: 'direct-access',
+      });
+
+      expect(bucket.bucketArn).toBe(bucket.bucket.bucketArn);
+      expect(bucket.bucketName).toBe(bucket.bucket.bucketName);
+    });
+  });
 });
