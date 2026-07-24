@@ -1,5 +1,11 @@
 # AWS CDK Secure Constructs
 
+[![CI](https://github.com/alphacrack/aws-cdk-secure-constructs/actions/workflows/ci.yml/badge.svg)](https://github.com/alphacrack/aws-cdk-secure-constructs/actions)
+[![Codecov](https://codecov.io/gh/alphacrack/aws-cdk-secure-constructs/branch/main/graph/badge.svg)](https://codecov.io/gh/alphacrack/aws-cdk-secure-constructs)
+[![npm](https://img.shields.io/npm/v/aws-cdk-secure-constructs.svg)](https://www.npmjs.com/package/aws-cdk-secure-constructs)
+[![License: MIT](https://img.shields.io/github/license/alphacrack/aws-cdk-secure-constructs.svg)](https://github.com/alphacrack/aws-cdk-secure-constructs/blob/main/LICENSE)
+
+
 Secure-by-default AWS CDK constructs with [CDK property injection](https://docs.aws.amazon.com/cdk/v2/guide/blueprints.html) support.
 
 **Status:** Early stage. Only **S3 (`SecureBucket`)** is implemented today. Requires `aws-cdk-lib` >= 2.196.0.
