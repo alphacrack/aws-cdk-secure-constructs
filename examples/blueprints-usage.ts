@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-import 'source-map-support/register';
 import { App, Stack, PropertyInjectors } from 'aws-cdk-lib';
 import { Bucket } from 'aws-cdk-lib/aws-s3';
 
