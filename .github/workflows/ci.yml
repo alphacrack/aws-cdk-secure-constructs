@@ -89,7 +89,7 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - name: Verify CIS compliance reports against synthesis
-        run: npx jest --ci --testPathPattern 'compliance'
+        run: npx jest --ci --testPathPatterns 'compliance'
 
   security:
     name: Security audit
