@@ -70,6 +70,26 @@ export class SecureBucket extends Construct {
   /** The underlying hardened bucket. */
   public readonly bucket: Bucket;
 
+  /** The bucket's ARN. Convenience pass-through for `this.bucket.bucketArn`. */
+  public get bucketArn(): string {
+    return this.bucket.bucketArn;
+  }
+
+  /** The bucket's name. Convenience pass-through for `this.bucket.bucketName`. */
+  public get bucketName(): string {
+    return this.bucket.bucketName;
+  }
+
+  /** The bucket's domain name. Convenience pass-through for `this.bucket.bucketDomainName`. */
+  public get bucketDomainName(): string {
+    return this.bucket.bucketDomainName;
+  }
+
+  /** The bucket's regional domain name. Convenience pass-through for `this.bucket.bucketRegionalDomainName`. */
+  public get bucketRegionalDomainName(): string {
+    return this.bucket.bucketRegionalDomainName;
+  }
+
   constructor(scope: Construct, id: string, props: SecureBucketProps = {}) {
     super(scope, id);
 
