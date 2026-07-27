@@ -8,7 +8,7 @@
     "lib",
     ".jsii"
   ],
-  "stability": "stable",
+  "stability": "experimental",
   "scripts": {
     "build": "jsii",
     "build:watch": "jsii --watch",
