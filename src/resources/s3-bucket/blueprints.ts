@@ -29,24 +29,25 @@ export class SecureBucketDefaults implements IPropertyInjector {
   public inject(originalProps: any, _context: InjectionContext): any {
     const props = (originalProps ?? {}) as BucketProps;
 
-    const secureDefaults: Partial<BucketProps> = {
-      encryption: props.encryption || BucketEncryption.S3_MANAGED,
-      blockPublicAccess: props.blockPublicAccess || BlockPublicAccess.BLOCK_ALL,
-      enforceSSL: props.enforceSSL !== false ? true : false,
-      versioned: props.versioned === undefined ? true : props.versioned,
-      objectOwnership: props.objectOwnership || ObjectOwnership.BUCKET_OWNER_ENFORCED,
-      intelligentTieringConfigurations: props.intelligentTieringConfigurations || [
+    // Fill only genuinely-undefined values. Spreading `props` first and
+    // overriding each field with `?? default` means an explicit `undefined`
+    // in the incoming props (common with conditional spreads) still falls
+    // through to the secure default, while any real value the caller supplied
+    // - including an explicit `false` - is preserved.
+    return {
+      ...props,
+      encryption: props.encryption ?? BucketEncryption.S3_MANAGED,
+      blockPublicAccess: props.blockPublicAccess ?? BlockPublicAccess.BLOCK_ALL,
+      enforceSSL: props.enforceSSL ?? true,
+      versioned: props.versioned ?? true,
+      objectOwnership: props.objectOwnership ?? ObjectOwnership.BUCKET_OWNER_ENFORCED,
+      intelligentTieringConfigurations: props.intelligentTieringConfigurations ?? [
         {
           name: 'default-tiering',
           archiveAccessTierTime: Duration.days(90),
           deepArchiveAccessTierTime: Duration.days(180),
         },
       ],
-    };
-
-    return {
-      ...secureDefaults,
-      ...props,
     };
   }
 }
