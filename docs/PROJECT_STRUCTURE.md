@@ -22,13 +22,13 @@ aws-cdk-secure-constructs/
 
 Each future resource lives under `src/resources/<name>/`:
 
-| File | Purpose |
-|------|---------|
-| `fields.ts` | CIS-critical vs tier-variable field definitions (internal) |
-| `secure-*.ts` | L3 construct |
-| `blueprints.ts` | Property injectors |
-| `compliance.ts` | CIS report (`*Compliance.report()`) |
-| `index.ts` | Module exports |
+| File            | Purpose                                                    |
+| --------------- | ---------------------------------------------------------- |
+| `fields.ts`     | CIS-critical vs tier-variable field definitions (internal) |
+| `secure-*.ts`   | L3 construct                                               |
+| `blueprints.ts` | Property injectors                                         |
+| `compliance.ts` | CIS report (`*Compliance.report()`)                        |
+| `index.ts`      | Module exports                                             |
 
 Wire new modules in `src/index.ts` and `ComplianceRegistry.all()`.
 

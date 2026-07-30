@@ -126,8 +126,18 @@ export class QueueCompliance {
       framework: 'CIS AWS Foundations Benchmark',
       version: 'v3.0.0',
       controls: [
-        { id: 'CIS-AWS-X.Y', title: 'Encryption at rest', status: ControlStatus.ENFORCED, enforcedBy: 'encryption=KMS_MANAGED' },
-        { id: 'CIS-AWS-X.Z', title: 'Enforce SSL', status: ControlStatus.ENFORCED, enforcedBy: 'enforceSSL=true' },
+        {
+          id: 'CIS-AWS-X.Y',
+          title: 'Encryption at rest',
+          status: ControlStatus.ENFORCED,
+          enforcedBy: 'encryption=KMS_MANAGED',
+        },
+        {
+          id: 'CIS-AWS-X.Z',
+          title: 'Enforce SSL',
+          status: ControlStatus.ENFORCED,
+          enforcedBy: 'enforceSSL=true',
+        },
       ],
     };
   }
@@ -151,11 +161,17 @@ import { App, Stack, PropertyInjectors } from 'aws-cdk-lib';
 import { Template } from 'aws-cdk-lib/assertions';
 import { Queue, QueueEncryption } from 'aws-cdk-lib/aws-sqs';
 
-import { ControlStatus, QueueCompliance, SecurityLevel, TieredSecureQueueDefaults } from '../../../src';
+import {
+  ControlStatus,
+  QueueCompliance,
+  SecurityLevel,
+  TieredSecureQueueDefaults,
+} from '../../../src';
 
 const ENFORCED_ASSERTIONS: Record<string, (t: Template) => void> = {
-  'CIS-AWS-X.Y': t => t.hasResourceProperties('AWS::SQS::Queue', { KmsMasterKeyId: 'alias/aws/sqs' }),
-  'CIS-AWS-X.Z': t => t.hasResourceProperties('AWS::SQS::QueuePolicy', { /* deny non-SSL */ }),
+  'CIS-AWS-X.Y': t =>
+    t.hasResourceProperties('AWS::SQS::Queue', { KmsMasterKeyId: 'alias/aws/sqs' }),
+  'CIS-AWS-X.Z': t => t.hasResourceProperties('AWS::SQS::QueuePolicy', {/* deny non-SSL */}),
 };
 
 describe('QueueCompliance (verified)', () => {
@@ -164,12 +180,16 @@ describe('QueueCompliance (verified)', () => {
   beforeEach(() => {
     const app = new App();
     const stack = new Stack(app, 'TestStack');
-    PropertyInjectors.of(stack).add(new TieredSecureQueueDefaults({ securityLevel: SecurityLevel.LOW }));
+    PropertyInjectors.of(stack).add(
+      new TieredSecureQueueDefaults({ securityLevel: SecurityLevel.LOW })
+    );
     new Queue(stack, 'Attacked', { encryption: QueueEncryption.UNENCRYPTED, enforceSSL: false });
     template = Template.fromStack(stack);
   });
 
-  const enforced = QueueCompliance.report().controls.filter(c => c.status === ControlStatus.ENFORCED);
+  const enforced = QueueCompliance.report().controls.filter(
+    c => c.status === ControlStatus.ENFORCED
+  );
 
   for (const control of enforced) {
     it(`enforces ${control.id} even under override attempts`, () => {

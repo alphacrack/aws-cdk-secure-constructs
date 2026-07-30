@@ -8,12 +8,12 @@ What this library enforces today, and what it does not.
 
 These cannot be disabled via props or property injectors:
 
-| Setting | Value |
-|---------|--------|
-| Encryption | SSE-S3 (`S3_MANAGED`) |
-| Block public access | `BLOCK_ALL` |
-| SSL | Enforced (deny non-TLS via bucket policy) |
-| Object ownership | `BUCKET_OWNER_ENFORCED` |
+| Setting             | Value                                     |
+| ------------------- | ----------------------------------------- |
+| Encryption          | SSE-S3 (`S3_MANAGED`)                     |
+| Block public access | `BLOCK_ALL`                               |
+| SSL                 | Enforced (deny non-TLS via bucket policy) |
+| Object ownership    | `BUCKET_OWNER_ENFORCED`                   |
 
 ### Tier-variable (default `HIGH`)
 
@@ -28,11 +28,11 @@ See [DESIGN.md](DESIGN.md) for the three-level control model.
 
 ## Property injectors
 
-| Injector | Behavior |
-|----------|----------|
-| `SecureBucketDefaults` | Secure defaults; user can override |
+| Injector                     | Behavior                                                     |
+| ---------------------------- | ------------------------------------------------------------ |
+| `SecureBucketDefaults`       | Secure defaults; user can override                           |
 | `StrictSecureBucketDefaults` | Locks encryption, block public access, SSL, object ownership |
-| `TieredSecureBucketDefaults` | Tier defaults + tighten-only + CIS-critical re-asserted |
+| `TieredSecureBucketDefaults` | Tier defaults + tighten-only + CIS-critical re-asserted      |
 
 Injectors apply when creating `aws-cdk-lib` L2 `Bucket` instances in a scope where they are registered. They do not enforce anything on L1 `CfnBucket` or resources created outside CDK.
 
