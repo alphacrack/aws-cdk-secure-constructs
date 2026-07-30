@@ -1,6 +1,6 @@
 import { App, Stack, PropertyInjectors, RemovalPolicy, InjectionContext } from 'aws-cdk-lib';
 import { Template } from 'aws-cdk-lib/assertions';
-import { Bucket } from 'aws-cdk-lib/aws-s3';
+import { Bucket, BucketEncryption, BlockPublicAccess, ObjectOwnership } from 'aws-cdk-lib/aws-s3';
 
 import {
   SecureBucketDefaults,
@@ -45,6 +45,26 @@ describe('S3 bucket blueprints', () => {
       for (const bucket of buckets) {
         expect(bucket['Properties'].VersioningConfiguration).toBeUndefined();
       }
+    });
+
+    it('does not let an explicit undefined clobber a secure default', () => {
+      const injector = new SecureBucketDefaults();
+      // A conditional spread can produce an explicit `undefined` value; the
+      // secure default must still apply rather than being disabled.
+      const result = injector.inject({ encryption: undefined }, ctx);
+
+      expect(result.encryption).toBe(BucketEncryption.S3_MANAGED);
+      expect(result.blockPublicAccess).toBe(BlockPublicAccess.BLOCK_ALL);
+      expect(result.objectOwnership).toBe(ObjectOwnership.BUCKET_OWNER_ENFORCED);
+    });
+
+    it('preserves an explicit false without treating it as unset', () => {
+      const injector = new SecureBucketDefaults();
+      const result = injector.inject({ enforceSSL: false, versioned: false }, ctx);
+
+      // `??` fills only nullish values, so a deliberate `false` survives.
+      expect(result.enforceSSL).toBe(false);
+      expect(result.versioned).toBe(false);
     });
   });
 
