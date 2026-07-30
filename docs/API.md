@@ -19,7 +19,7 @@ are always enforced regardless of tier.
 
 ```typescript
 enum SecurityLevel {
-  HIGH = 'high',   // library default
+  HIGH = 'high', // library default
   MEDIUM = 'medium',
   LOW = 'low',
 }
@@ -46,14 +46,14 @@ Extends `BucketProps` with additional security-focused properties. CIS-critical
 settings (`encryption`, `blockPublicAccess`, `enforceSSL`, `objectOwnership`) are
 always enforced and any conflicting values supplied here are ignored.
 
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `securityLevel` | `SecurityLevel` | `HIGH` | Operational tier for tier-variable fields |
-| `versioned` | `boolean` | tier (`true` for HIGH/MEDIUM) | Whether to enable versioning |
-| `enableAccessLogging` | `boolean` | tier (`true` for HIGH/MEDIUM) | Whether to provision an access-log bucket |
-| `lifecycleRules` | `LifecycleRule[]` | Default cost optimization rules | Lifecycle rules for the bucket |
-| `removalPolicy` | `RemovalPolicy` | tier (`RETAIN` for HIGH) | Removal policy for the bucket |
-| `enableEncryption` | `boolean` | _ignored_ | Deprecated; encryption is always enforced (CIS-critical) |
+| Property              | Type              | Default                         | Description                                              |
+| --------------------- | ----------------- | ------------------------------- | -------------------------------------------------------- |
+| `securityLevel`       | `SecurityLevel`   | `HIGH`                          | Operational tier for tier-variable fields                |
+| `versioned`           | `boolean`         | tier (`true` for HIGH/MEDIUM)   | Whether to enable versioning                             |
+| `enableAccessLogging` | `boolean`         | tier (`true` for HIGH/MEDIUM)   | Whether to provision an access-log bucket                |
+| `lifecycleRules`      | `LifecycleRule[]` | Default cost optimization rules | Lifecycle rules for the bucket                           |
+| `removalPolicy`       | `RemovalPolicy`   | tier (`RETAIN` for HIGH)        | Removal policy for the bucket                            |
+| `enableEncryption`    | `boolean`         | _ignored_                       | Deprecated; encryption is always enforced (CIS-critical) |
 
 ### Methods
 
@@ -141,13 +141,13 @@ Property injector that applies secure defaults to all S3 buckets in the construc
 ### Constructor
 
 ```typescript
-new SecureBucketDefaults()
+new SecureBucketDefaults();
 ```
 
 ### Properties
 
-| Property | Type | Description |
-|----------|------|-------------|
+| Property            | Type     | Description                                    |
+| ------------------- | -------- | ---------------------------------------------- |
 | `constructUniqueId` | `string` | The unique identifier for S3 bucket constructs |
 
 ### Methods
@@ -205,13 +205,13 @@ Property injector that applies strict security defaults that cannot be overridde
 ### Constructor
 
 ```typescript
-new StrictSecureBucketDefaults()
+new StrictSecureBucketDefaults();
 ```
 
 ### Properties
 
-| Property | Type | Description |
-|----------|------|-------------|
+| Property            | Type     | Description                                    |
+| ------------------- | -------- | ---------------------------------------------- |
 | `constructUniqueId` | `string` | The unique identifier for S3 bucket constructs |
 
 ### Methods
@@ -448,16 +448,19 @@ const secureBucket = new SecureBucket(this, 'MyBucket');
 ### When to Use Each Construct
 
 #### Use SecureBucket when:
+
 - You need a single secure bucket with custom configuration
 - You want explicit control over security settings
 - You're building a specific use case
 
 #### Use SecureBucketDefaults when:
+
 - You want consistent security across multiple buckets
 - You want to allow developers to override settings when needed
 - You're building organizational standards
 
 #### Use StrictSecureBucketDefaults when:
+
 - You need to enforce compliance requirements
 - You want to prevent security setting overrides
 - You're in a highly regulated environment
@@ -476,4 +479,4 @@ const secureBucket = new SecureBucket(this, 'MyBucket');
 
 ---
 
-For more information, see the [README](./README.md) and [Security Documentation](./SECURITY.md). 
+For more information, see the [README](./README.md) and [Security Documentation](./SECURITY.md).

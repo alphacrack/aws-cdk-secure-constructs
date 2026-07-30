@@ -1,6 +1,6 @@
 {
   "name": "aws-cdk-secure-constructs",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Secure-by-default AWS CDK constructs with property injection and CIS-verified compliance reports",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -23,12 +23,8 @@
     "lint": "eslint \"src/**/*.ts\" \"test/**/*.ts\" \"examples/*.ts\"",
     "lint:fix": "eslint \"src/**/*.ts\" \"test/**/*.ts\" \"examples/*.ts\" --fix",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"examples/*.ts\" \"**/*.{json,md}\"",
-    "format:check": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\" \"examples/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\" \"examples/*.ts\" \"**/*.{json,md}\"",
     "prepublishOnly": "npm run build",
-    "cdk": "cdk",
-    "cdk:synth": "cdk synth",
-    "cdk:deploy": "cdk deploy",
-    "cdk:destroy": "cdk destroy",
     "prepare": "husky",
     "pre-commit": "lint-staged",
     "clean": "rm -rf lib dist coverage .jsii tsconfig.tsbuildinfo"
@@ -62,17 +58,6 @@
       "python": {
         "distName": "aws-cdk-secure-constructs",
         "module": "aws_cdk_secure_constructs"
-      },
-      "java": {
-        "package": "io.github.example.securecdk",
-        "maven": {
-          "groupId": "io.github.example",
-          "artifactId": "aws-cdk-secure-constructs"
-        }
-      },
-      "dotnet": {
-        "namespace": "Example.SecureCdk",
-        "packageId": "Example.SecureCdk"
       }
     },
     "tsc": {
@@ -86,7 +71,6 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@nrwl/workspace": "^19.8.4",
     "@types/jest": "^30.0.0",
     "@types/node": "^20.8.10",
     "@typescript-eslint/eslint-plugin": "^8.60.1",
@@ -106,7 +90,6 @@
     "jsii-diff": "^1.135.0",
     "jsii-pacmak": "^1.135.0",
     "lint-staged": "^17.2.0",
-    "nx": "23.1.0",
     "prettier": "^3.8.4",
     "ts-jest": "^29.4.12",
     "typescript": "~6.0.3",
@@ -127,7 +110,6 @@
     ]
   },
   "engines": {
-    "node": ">=18.0.0"
-  },
-  "nx": {}
+    "node": ">=20.0.0"
+  }
 }

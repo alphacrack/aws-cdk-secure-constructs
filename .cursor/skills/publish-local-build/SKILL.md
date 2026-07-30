@@ -90,18 +90,23 @@ so `cdk synth` exercises them. Keep imports from the **package name**, never `..
 Minimal pattern:
 
 ```typescript
-import { SecureBucket, SecurityLevel, TieredSecureBucketDefaults, ComplianceRegistry } from 'aws-cdk-secure-constructs';
+import {
+  SecureBucket,
+  SecurityLevel,
+  TieredSecureBucketDefaults,
+  ComplianceRegistry,
+} from 'aws-cdk-secure-constructs';
 ```
 
 ## Troubleshooting
 
-| Symptom | Fix |
-|--------|-----|
-| Tarball missing `lib/index.js` | Restore `package.json` `"files": ["lib", ".jsii"]` |
-| `npm pack` captures husky output | Use `--ignore-scripts` when parsing tarball name |
+| Symptom                             | Fix                                                                          |
+| ----------------------------------- | ---------------------------------------------------------------------------- |
+| Tarball missing `lib/index.js`      | Restore `package.json` `"files": ["lib", ".jsii"]`                           |
+| `npm pack` captures husky output    | Use `--ignore-scripts` when parsing tarball name                             |
 | `cdk synth` fails in local-consumer | Check peer deps (`aws-cdk-lib` ^2.196.0, `constructs` ^10.3.0) match library |
-| jsii build fails on tsconfig | jsii owns root `tsconfig.json`; Jest uses `tsconfig.spec.json` |
-| Release script rejects branch | Must run from `main` with clean working tree |
+| jsii build fails on tsconfig        | jsii owns root `tsconfig.json`; Jest uses `tsconfig.spec.json`               |
+| Release script rejects branch       | Must run from `main` with clean working tree                                 |
 
 ## Verify (agent must run)
 

@@ -1,0 +1,14 @@
+# jsii owns this file's formatting and regenerates it on build; letting
+# Prettier reformat it causes a check/build flip-flop.
+tsconfig.json
+.jsii
+
+# Generated build output
+lib/
+dist/
+coverage/
+*.tsbuildinfo
+
+# Package manager owns this file
+package-lock.json
+node_modules/

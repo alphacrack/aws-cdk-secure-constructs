@@ -1,10 +1,16 @@
 #!/usr/bin/env bash
-# Bump version on main, tag vX.Y.Z, and push — release.yml publishes to npm on tag push.
+# Bump version on main, tag vX.Y.Z, and push. Pushing the tag runs release.yml,
+# which verifies the build and creates a GitHub Release. Publishing to npm is a
+# separate, deliberate step (run the Release workflow with publish_npm: true).
+#
+# NOTE: `main` is branch-protected, so `npm version` cannot push its commit
+# directly. Bump the version via a PR, then tag the merge commit instead of
+# running this script end-to-end. See docs/RELEASING.md.
 #
 # Usage:
-#   npm run release -- patch    # 1.0.0 -> 1.0.1
-#   npm run release -- minor    # 1.0.0 -> 1.1.0
-#   npm run release -- major    # 1.0.0 -> 2.0.0
+#   npm run release -- patch    # 0.1.0 -> 0.1.1
+#   npm run release -- minor    # 0.1.0 -> 0.2.0
+#   npm run release -- major    # 0.1.0 -> 1.0.0
 #   npm run release -- 1.2.3    # explicit version
 set -euo pipefail
 
@@ -45,5 +51,6 @@ npm version "$BUMP" -m "chore(release): v%s"
 echo "==> Pushing commit and tag to origin..."
 git push --follow-tags origin main
 
-echo "==> Release initiated. CI will publish to npm when the tag workflow completes."
+echo "==> Tag pushed. release.yml will create the GitHub Release."
+echo "    npm publish is manual: run the Release workflow with publish_npm: true."
 echo "    Monitor: https://github.com/alphacrack/aws-cdk-secure-constructs/actions"
