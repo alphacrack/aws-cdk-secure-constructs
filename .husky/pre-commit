@@ -6,8 +6,11 @@ NC='\033[0m' # No Color
 
 echo "${YELLOW}🔍 Running pre-commit checks...${NC}"
 
-# Only check files staged for commit
-STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(ts|js|json|md)$')
+# Only check files staged for commit.
+# `|| true` keeps a no-match `grep` (exit 1) from aborting the hook, which
+# husky runs under `sh -e` - otherwise commits touching only non-matched
+# files (e.g. .yml, .sh) would fail here.
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(ts|js|json|md)$' || true)
 
 if [ -z "$STAGED_FILES" ]; then
     echo "${YELLOW}⚠️  No staged files to check${NC}"
