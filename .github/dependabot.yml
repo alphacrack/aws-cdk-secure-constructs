@@ -10,6 +10,14 @@ updates:
     commit-message:
       prefix: chore
       include: scope
+    ignore:
+      # @types/node tracks the lowest supported Node major (engines >=20).
+      # A major bump would type-check APIs unavailable on Node 20 and give a
+      # false sense of compatibility. Bump this deliberately alongside the
+      # engines floor. (Closed PRs #67 and #74 were both this.)
+      - dependency-name: "@types/node"
+        update-types:
+          - version-update:semver-major
     groups:
       minor-and-patch:
         update-types:
