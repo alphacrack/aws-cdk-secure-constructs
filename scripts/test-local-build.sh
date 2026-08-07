@@ -31,8 +31,11 @@ cd "$CONSUMER"
 echo "==> Installing consumer app dependencies..."
 npm install --no-fund --no-audit
 
-echo "==> Installing packed library..."
-npm install --no-fund --no-audit "$ROOT/$TARBALL"
+# Install the freshly packed tarball into node_modules only (--no-save), so the
+# consumer's package.json is never mutated and the check works regardless of the
+# library version (the tarball name includes the version).
+echo "==> Installing the packed library ($TARBALL)..."
+npm install --no-fund --no-audit --no-save "$ROOT/$TARBALL"
 
 echo "==> Synthesizing CDK stack..."
 npx cdk synth >/dev/null
