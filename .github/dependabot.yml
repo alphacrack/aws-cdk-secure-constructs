@@ -18,6 +18,12 @@ updates:
       - dependency-name: "@types/node"
         update-types:
           - version-update:semver-major
+      # jsii pins the TypeScript compiler (jsii 6.x -> typescript ~6.0), so a
+      # TypeScript major cannot build until a matching jsii major ships. Take
+      # them together as a deliberate toolchain upgrade. (Closed PR #77 was this.)
+      - dependency-name: "typescript"
+        update-types:
+          - version-update:semver-major
     groups:
       minor-and-patch:
         update-types:
